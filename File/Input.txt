@@ -1,9 +1,8 @@
-
 void main()
 {
     int sum = 0;
     for (int j = 0; j < 10; j = j + 1)
     {
-        sum = sum + j + 10.43 + 34E4 + 45.34E-4 + E43 + .34;
+        sum = sum + j + 10.43 + 34.E4 + 45.34E-4 + E43 + .34;
     }
 }

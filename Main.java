@@ -7,6 +7,7 @@ import java.util.*;
 class Main {
     public static void main(String[] args) {
         String code = ReadTextFile();
+        System.out.println(code);
         analyzeCode(code);
     }
 
@@ -37,21 +38,33 @@ class Main {
     }
 
     public static void analyzeCode(String code) {
+        // setup keyword
+        String keyword = "while|if|else|return|break|continue|int|float|void|for";
+
+        String letter = "[A-Za-z]";
+        String digit = "[0-9]";
+        String underscore = "_";
+        String identifier = letter + "(" + letter + "|" + digit + "|" + underscore + ")*";
+
+        String digits = digit + "(" + digit + ")*";
+        String optionalFraction = "(\\." + digits + ")?";
+        String optionalExponent = "(.)?(E[+|-]?" + digits + ")?";
+        String num = "^" + digits + optionalFraction + optionalExponent + "$";
+
         // Tạo các biến Pattern cho các loại lexeme cần phân tích
-        Pattern keywordPattern = Pattern.compile("\\b(void|int|for)\\b");
-        Pattern identifierPattern = Pattern.compile("\\b[a-zA-Z_][a-zA-Z0-9_]*\\b");
-        Pattern numPattern = Pattern.compile("-?\\b\\d+(\\.\\d+)?([Ee][-+]?\\d+)?\\b");
-        Pattern operatorPattern = Pattern.compile("[-+*/=(){}<;]");
-        Pattern errorPattern = Pattern.compile("[^a-zA-Z_0-9\\s+\\-*/=(){}<>;]\r\n" + //
-                "");
+        Pattern keywordPattern = Pattern.compile("\\b" + "(" + keyword + ")" + "\\b");
+        Pattern identifierPattern = Pattern.compile("\\b" + identifier + "\\b");
+        Pattern numPattern = Pattern.compile("\\b" + num + "\\b");
+        Pattern operatorPattern = Pattern.compile("[-+*/=(){}<>;]");
+        Pattern errorPattern = Pattern.compile("[\\.^a-zA-Z_0-9\\-*/=(){}<>;]");
 
         // Tạo danh sách các lexeme
         List<String> lexemes = new ArrayList<>();
 
         // Tách các lexeme từ đoạn mã
-        Matcher matcher = Pattern.compile("\\s+").matcher(code);
+        Matcher matcher = Pattern.compile("\\s").matcher(code);
         code = matcher.replaceAll(" ");
-        matcher = Pattern.compile("(\\b|\\s)([-+*/=(){}<>;])(\\b|\\s)").matcher(code);
+        matcher = Pattern.compile("(\\b|\\s*)([-+*/=(){}<>;])(\\b|\\s*)").matcher(code);
         code = matcher.replaceAll("$1 $2 $3");
         String[] tokens = code.split("\\s");
 
@@ -69,7 +82,7 @@ class Main {
             } else if (numMatcher.matches()) {
                 lexemes.add("num : " + token);
             } else if (operatorMatcher.matches()) {
-                lexemes.add(token);
+                lexemes.add(token + " : " + token);
             } else if (errorMatcher.find()) {
                 lexemes.add("Error : " + token);
             }
