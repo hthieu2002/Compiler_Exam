@@ -46,7 +46,7 @@ public class LexicalAnalyzer {
 
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(line);
-
+    System.out.println("Class : Lexeme");
     while (matcher.find()) {
       String token = matcher.group();
       if (token.matches(keywordsRegex)) {
