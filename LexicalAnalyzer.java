@@ -9,6 +9,7 @@ public class LexicalAnalyzer {
     try {
       BufferedReader reader = new BufferedReader(new FileReader("./File/Input.txt"));
       String line;
+      System.out.println("Class : Lexeme");
       while ((line = reader.readLine()) != null) {
         processLine(line);
       }
@@ -36,17 +37,17 @@ public class LexicalAnalyzer {
     String keywordsRegex = "\\b(" + keyword + ")\\b";
     String identifierRegex = identifier;
     String numRegex = num;
-    String operatorsRegex = "[=+<>]";
-    String symbolsRegex = "[(){};]";
+    String operatorsRegex = "[=+<>(){};]";
+    // String symbolsRegex = "[(){};]";
     String errorRegex = "\\.";
 
     String regex = String.format(
         "(%s)|(%s)|(%s)|(%s)|(%s)|(%s)",
-        keywordsRegex, identifierRegex, numRegex, operatorsRegex, symbolsRegex, errorRegex, "\\S+");
+        keywordsRegex, identifierRegex, numRegex, operatorsRegex, errorRegex, "\\S+");
 
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(line);
-    System.out.println("Class : Lexeme");
+
     while (matcher.find()) {
       String token = matcher.group();
       if (token.matches(keywordsRegex)) {
@@ -56,8 +57,6 @@ public class LexicalAnalyzer {
       } else if (token.matches(numRegex)) {
         System.out.println("num : " + token);
       } else if (token.matches(operatorsRegex)) {
-        System.out.println(token + " : " + token);
-      } else if (token.matches(symbolsRegex)) {
         System.out.println(token + " : " + token);
       } else if (token.matches(errorRegex)) {
         System.out.println("Error : " + token);
