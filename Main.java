@@ -45,18 +45,24 @@ class Main {
         String digit = "[0-9]";
         String underscore = "_";
         String identifier = letter + "(" + letter + "|" + digit + "|" + underscore + ")*";
-
+        /*
+         * 33
+         * 33.4
+         * 33.4E
+         * 33.E4
+         * 33.4E-4
+         */
         String digits = digit + "(" + digit + ")*";
-        String optionalFraction = "(\\." + digits + ")?";
-        String optionalExponent = "(.)?(E[+|-]?" + digits + ")?";
-        String num = "^" + digits + optionalFraction + optionalExponent + "$";
+        String optionalFraction = "(.(" + digits + "))?";
+        String optionalExponent = "(E[+-]?" + digits + ")?";
+        String num = digits + optionalFraction + optionalExponent;
 
         // Tạo các biến Pattern cho các loại lexeme cần phân tích
         Pattern keywordPattern = Pattern.compile("\\b" + "(" + keyword + ")" + "\\b");
         Pattern identifierPattern = Pattern.compile("\\b" + identifier + "\\b");
         Pattern numPattern = Pattern.compile("\\b" + num + "\\b");
         Pattern operatorPattern = Pattern.compile("[-+*/=(){}<>;]");
-        Pattern errorPattern = Pattern.compile("[\\.^a-zA-Z_0-9\\-*/=(){}<>;]");
+        Pattern errorPattern = Pattern.compile("[.^a-zA-Z_0-9-*/=(){}<>;]");
 
         // Tạo danh sách các lexeme
         List<String> lexemes = new ArrayList<>();
